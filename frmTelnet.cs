@@ -35,6 +35,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Data.SqlClient;
 #endregion
 
 namespace Telnet
@@ -63,6 +64,8 @@ namespace Telnet
         private bool KeyHandled = false;
 
         private int checkPrint;
+
+        SqlConnection db;
 
         #endregion
 
@@ -1135,9 +1138,35 @@ namespace Telnet
         {
             this.customBtn_click(8);
         }
+
         #endregion
 
+        private void frmTelnet_Load(object sender, EventArgs e) {
+            try {
+                db = new SqlConnection("Server=.;Database=mydatabase;user id=sa;password=Supercncy.;MultipleActiveResultSets=true;Asynchronous Processing=true");
 
+                db.Open();
+                var command = db.CreateCommand();
+                command.CommandText = "select * from mydatabase.dbo.monitordata";
+
+                //var data = command.BeginExecuteReader();
+                //var dat1 = command.ExecuteReader();
+                //var data2 = command.EndExecuteReader(data);
+
+                var ss = command.ExecuteReader().GetValue(0);
+                var ss1 = command.ExecuteScalar();
+                //XmlReadMode ss2 = command.ExecuteXmlReader();
+                var ss3 = command.ExecuteNonQuery();
+                //command.qu
+                var dat1 = command.ExecuteReader();
+                db.Close();
+            } catch(Exception ex) {
+                ex.Message.ToString();
+            }
+            
+
+
+        }
     }
 }
 
